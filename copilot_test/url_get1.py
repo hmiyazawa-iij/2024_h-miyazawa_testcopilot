@@ -30,7 +30,7 @@ def fetch_data(url: str, params: Optional[Dict[str, Any]] = None, headers: Optio
     return None
 
 # データを取得するURL
-url = 'https://ja.wikipedia.org/wiki/Google'
+url = 'https://www.iij.ad.jp/'
 params = {'key1': 'value1', 'key2': 'value2'}  # 例としてリクエストパラメータを設定
 headers = {'User-Agent': 'my-app/0.0.1'}  # 例としてヘッダーを設定
 
