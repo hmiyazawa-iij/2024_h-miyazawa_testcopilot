@@ -1,0 +1,2 @@
+2024-12-05 15:20:20,167 - ERROR - Request error occurred: HTTPSConnectionPool(host='ja.wikipedia.org', port=443): Max retries exceeded with url: /wiki/Google?key1=value1&key2=value2 (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7fa2b95a0790>: Failed to establish a new connection: [Errno 101] Network is unreachable'))
+2024-12-05 15:27:29,800 - INFO - Data fetched successfully
