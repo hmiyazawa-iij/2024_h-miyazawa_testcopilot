@@ -18,18 +18,20 @@ def main():
         'loginId': f'{user}@iij.ad.jp',
         'password': password,
         'dom': '',
-        'burl': 'https://login.iij-bo.jp',
+        'burl': 'https://lhogehoge',
         'amtd': 'PASSWD'
     }
 
-    login_url = 'https://login.iij-bo.jp/sso/login.do'
-    target_url = 'https://cxe-sv.iij-bo.jp/api/get_vm_list'
+    login_url = 'https://hogehoge'
+    target_url = 'https://hogehoge'
 
     try:
         with requests.Session() as session:
             login_response = session.post(login_url, data=login_data)
             login_response.raise_for_status()  # HTTPエラーが発生した場合、例外を発生させる
 
+            print("ログインに成功しました")
+            
             response = session.get(target_url)
             response.raise_for_status()  # HTTPエラーが発生した場合、例外を発生させる
 
