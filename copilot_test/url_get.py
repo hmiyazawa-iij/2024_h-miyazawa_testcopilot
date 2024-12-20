@@ -20,7 +20,7 @@ def fetch_data(url: str) -> Optional[str]:
     return None
 
 # データを取得するURL
-url = 'https://accounts.google.com/'
+url = 'https://cxe-sv.iij-bo.jp/api/get_vm_list'
 data = fetch_data(url)
 if data:
     print(data)

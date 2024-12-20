@@ -1,39 +1,41 @@
-# 変数設定
+import getpass
 import requests
-import logging
-from typing import Optional, Dict, Any
-import os
 
-# ログフォルダとファイルの設定
-log_folder = 'logs'
-log_file = 'app.log'
-os.makedirs(log_folder, exist_ok=True)
-log_path = os.path.join(log_folder, log_file)
+def main():
+    print("SV にログインするため Idaten 認証をします")
+    user = input("ユーザ名: ")
+    password = getpass.getpass("パスワード: ")
 
-# ログの設定
-logging.basicConfig(level=logging.INFO, 
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    handlers=[logging.FileHandler(log_path, 'a', 'utf-8')])
+    print("jp にログインするため LDAP 認証をします")
+    luser = input("ユーザ名: ")
+    lpass = getpass.getpass("パスワード: ")
 
-def fetch_data(url: str, params: Optional[Dict[str, Any]] = None, headers: Optional[Dict[str, str]] = None) -> Optional[str]:
+    # Idaten SSO 認証
+    user = user.replace('@iij.ad.jp', '')
+    luser = luser.replace('@iij.ad.jp', '')
+
+    login_data = {
+        'loginId': f'{user}@iij.ad.jp',
+        'password': password,
+        'dom': '',
+        'burl': 'https://login.iij-bo.jp',
+        'amtd': 'PASSWD'
+    }
+
+    login_url = 'https://login.iij-bo.jp/sso/login.do'
+    target_url = 'https://cxe-sv.iij-bo.jp/api/get_vm_list'
+
     try:
-        response = requests.get(url, params=params, headers=headers, timeout=10)  # タイムアウトを10秒に設定
-        response.raise_for_status()  # HTTPエラーが発生した場合は例外を発生させる
-        logging.info('Data fetched successfully')
-        return response.text
-    except requests.exceptions.HTTPError as http_err:
-        logging.error(f'HTTP error occurred: {http_err}')
-    except requests.exceptions.RequestException as req_err:
-        logging.error(f'Request error occurred: {req_err}')
-    except Exception as err:
-        logging.error(f'Other error occurred: {err}')
-    return None
+        with requests.Session() as session:
+            login_response = session.post(login_url, data=login_data)
+            login_response.raise_for_status()  # HTTPエラーが発生した場合、例外を発生させる
 
-# データを取得するURL
-url = 'https://www.iij.ad.jp/'
-params = {'key1': 'value1', 'key2': 'value2'}  # 例としてリクエストパラメータを設定
-headers = {'User-Agent': 'my-app/0.0.1'}  # 例としてヘッダーを設定
+            response = session.get(target_url)
+            response.raise_for_status()  # HTTPエラーが発生した場合、例外を発生させる
 
-data = fetch_data(url, params=params, headers=headers)
-if data:
-    print(data)
+            print(response.text)
+    except requests.exceptions.RequestException as e:
+        print(f"リクエスト中にエラーが発生しました: {e}")
+
+if __name__ == "__main__":
+    main()
